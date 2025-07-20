@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 import sys
 
 load_dotenv()
@@ -11,10 +12,13 @@ def main():
     model = "gemini-2.0-flash-001"
     if len(sys.argv) > 1:
         contents = sys.argv[1]
-        response = client.models.generate_content(model=model, contents=contents)
+        messages = [types.Content(role="user", parts=[types.Part(text=contents)]),]
+        response = client.models.generate_content(model=model, contents=messages)
         print(response.text)
-        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+        if len(sys.argv) > 2:
+            print(f"User prompt: {contents}")
+            print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+            print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
     else:
         print("No prompt was provided")
         exit(1)
