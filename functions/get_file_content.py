@@ -1,5 +1,20 @@
 import os
 from .config import CHARACTER_LIMIT
+from google.genai import types
+
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Display the content of a file, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file": types.Schema(
+                type=types.Type.STRING,
+                description="The file to display it's contents.",
+            ),
+        },
+    ),
+)
 
 def get_file_content(working_directory, file_path):
     try:
